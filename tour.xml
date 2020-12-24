@@ -1,0 +1,340 @@
+﻿<krpano version="1.20.7" title="Virtual Tour">
+
+	<include url="skin/vtourskin.xml" if="0"/>
+	<include url="vuho_overlay.xml" if="1" />
+	<!-- customize skin settings: maps, gyro, webvr, thumbnails, tooltips, layout, design, ... -->
+	<skin_settings maps="true"
+	               maps_type="google"
+	               maps_bing_api_key=""
+	               maps_google_api_key=""
+	               maps_zoombuttons="false"
+	               maps_loadonfirstuse="true"
+	               gyro="true"
+	               gyro_keeplookingdirection="false"
+	               webvr="true"
+	               webvr_keeplookingdirection="true"
+	               webvr_prev_next_hotspots="true"
+	               autotour="false"
+	               littleplanetintro="false"
+	               followmousecontrol="false"
+	               title="true"
+	               thumbs="true"
+	               thumbs_width="120" thumbs_height="80" thumbs_padding="10" thumbs_crop="0|40|240|160"
+	               thumbs_opened="false"
+	               thumbs_text="false"
+	               thumbs_dragging="true"
+	               thumbs_onhoverscrolling="false"
+	               thumbs_scrollbuttons="false"
+	               thumbs_scrollindicator="false"
+	               thumbs_loop="false"
+	               tooltips_buttons="false"
+	               tooltips_thumbs="false"
+	               tooltips_hotspots="false"
+	               tooltips_mapspots="false"
+	               deeplinking="false"
+	               loadscene_flags="MERGE"
+	               loadscene_blend="OPENBLEND(0.5, 0.0, 0.75, 0.05, linear)"
+	               loadscene_blend_prev="SLIDEBLEND(0.5, 180, 0.75, linear)"
+	               loadscene_blend_next="SLIDEBLEND(0.5,   0, 0.75, linear)"
+	               loadingtext="loading..."
+	               layout_width="100%"
+	               layout_maxwidth="814"
+	               controlbar_width="-24"
+	               controlbar_height="40"
+	               controlbar_offset="20"
+	               controlbar_offset_closed="-40"
+	               controlbar_overlap.no-fractionalscaling="10"
+	               controlbar_overlap.fractionalscaling="0"
+	               design_skin_images="vtourskin.png"
+	               design_bgcolor="0x2D3E50"
+	               design_bgalpha="0.8"
+	               design_bgborder="0"
+	               design_bgroundedge="1"
+	               design_bgshadow="0 4 10 0x000000 0.3"
+	               design_thumbborder_bgborder="3 0xFFFFFF 1.0"
+	               design_thumbborder_padding="2"
+	               design_thumbborder_bgroundedge="0"
+	               design_text_css="color:#FFFFFF; font-family:Arial;"
+	               design_text_shadow="1"
+	               />
+
+	<!--
+	    For an alternative skin design either change the <skin_settings> values 
+	    from above or optionally include one of the predefined designs from below.
+	-->
+	<!-- <include url="skin/vtourskin_design_flat_light.xml"  /> -->
+	<!-- <include url="skin/vtourskin_design_glass.xml"       /> -->
+	<!-- <include url="skin/vtourskin_design_ultra_light.xml" /> -->
+	<!-- <include url="skin/vtourskin_design_117.xml"         /> -->
+	<!-- <include url="skin/vtourskin_design_117round.xml"    /> -->
+	<!-- <include url="skin/vtourskin_design_black.xml"       /> -->
+	
+	<!-- Dependencies -->
+	<style name="skin_hotspotstyle" url="%ROOT%/skin/vtourskin_hotspot.png" edge="top" distorted="true"
+	   tooltip=""
+	   linkedscene=""
+	   linkedscene_lookat=""
+	   onclick="skin_hotspotstyle_click();"
+	   depth="1000"
+	   scale="0.5"
+	   onover.addevent="tween(scale,0.55);"
+	   onout.addevent="tween(scale,0.5);"
+	   />
+		   
+	<action name="skin_hotspotstyle_click" scope="local">
+		if(isvalue(caller.linkedscene),
+			copy(hs_linkedscene, caller.linkedscene);
+			if(caller.linkedscene_lookat, txtsplit(caller.linkedscene_lookat, ',', hs_lookat_h, hs_lookat_v, hs_lookat_fov); );
+			set(caller.enabled, false);
+			tween(caller.depth|caller.alpha|caller.oy|caller.rx, 4000|0.0|-50|-60, 0.5, default,
+				skin_loadscene(get(hs_linkedscene), get(skin_settings.loadscene_blend));
+				if(hs_lookat_h !== null, skin_lookat(get(hs_lookat_h), get(hs_lookat_v), get(hs_lookat_fov)); );
+			);
+		);
+	</action>
+	
+	<action name="skin_loadscene" scope="local" args="newscenenameorindex, blendmode">
+		if(webvr.isenabled AND scene.count GT 1,
+			set(hotspot[skin_webvr_prev_scene].visible, false);
+			set(hotspot[skin_webvr_next_scene].visible, false);
+		);
+		
+		loadscene(get(scene[get(newscenenameorindex)].name), null, get(skin_settings.loadscene_flags), get(blendmode));
+	</action>
+	
+
+		   
+	<!-- startup action - load the first scene -->
+	<action name="startup" autorun="onstart">
+		if(startscene === null OR !scene[get(startscene)], copy(startscene,scene[0].name); );
+		loadscene(kitchen, null, MERGE);
+		if(startactions !== null, startactions() );
+	</action>
+
+
+	
+	<scene name="main_room" title="Main Room" onstart="" havevrimage.mobilevr="false" havevrimage.no-mobilevr="true" thumburl="panos/IMG_20201214_102252.tiles/thumb.jpg" lat="" lng="" heading="">
+
+		<view hlookat="-33.101" vlookat="16.089" fovtype="MFOV" fov="120.000" maxpixelzoom="2.0" fovmin="70" fovmax="140" limitview="auto" />
+
+		<preview url="panos/IMG_20201214_102252.tiles/preview.jpg" />
+
+		<image if="!(webvr.isenabled OR device.mobilevr)">
+			<cube url="panos/IMG_20201214_102252.tiles/%s/l%l/%v/l%l_%s_%v_%h.jpg" multires="512,1152,2176" />
+		</image>
+
+		<image if="webvr.isenabled OR device.mobilevr">
+			<cube url="panos/IMG_20201214_102252.tiles/vr/pano_%s.jpg" />
+		</image>
+		<hotspot name="spot1" style="skin_hotspotstyle" ath="-35.384" atv="16.226" linkedscene="main_room_hallway" />
+
+	</scene>
+	
+	<scene name="main_room_hallway" title="Main Room - Hallway" onstart="" havevrimage.mobilevr="false" havevrimage.no-mobilevr="true" thumburl="panos/IMG_20201214_104724.tiles/thumb.jpg" lat="4.68148400" lng="-74.04269200" heading="0.0">
+
+		<view hlookat="170.340" vlookat="30.330" fovtype="MFOV" fov="120.000" maxpixelzoom="2.0" fovmin="70" fovmax="140" limitview="auto" />
+
+		<preview url="panos/IMG_20201214_104724.tiles/preview.jpg" />
+
+		<image if="!(webvr.isenabled OR device.mobilevr)">
+			<cube url="panos/IMG_20201214_104724.tiles/%s/l%l/%v/l%l_%s_%v_%h.jpg" multires="512,1152,2176" />
+		</image>
+
+		<image if="webvr.isenabled OR device.mobilevr">
+			<cube url="panos/IMG_20201214_104724.tiles/vr/pano_%s.jpg" />
+		</image>
+		<hotspot name="spot1" style="skin_hotspotstyle" ath="112.670" atv="10.723" linkedscene="main_room_bathroom" />
+		<hotspot name="spot2" style="skin_hotspotstyle" ath="-160.096" atv="20.859" linkedscene="study" />
+		<hotspot name="spot3" style="skin_hotspotstyle" ath="1.379" atv="12.318" linkedscene="main_room" />
+
+	</scene>
+	
+	<scene name="main_room_bathroom" title="Main Room - Bathroom" onstart="" havevrimage.mobilevr="false" havevrimage.no-mobilevr="true" thumburl="panos/IMG_20201214_102536.tiles/thumb.jpg" lat="4.68140800" lng="-74.04262000" heading="0.0">
+
+		<view hlookat="103.664" vlookat="47.413" fovtype="MFOV" fov="120.000" maxpixelzoom="2.0" fovmin="70" fovmax="140" limitview="auto" />
+
+		<preview url="panos/IMG_20201214_102536.tiles/preview.jpg" />
+
+		<image if="!(webvr.isenabled OR device.mobilevr)">
+			<cube url="panos/IMG_20201214_102536.tiles/%s/l%l/%v/l%l_%s_%v_%h.jpg" multires="512,1152,2176" />
+		</image>
+
+		<image if="webvr.isenabled OR device.mobilevr">
+			<cube url="panos/IMG_20201214_102536.tiles/vr/pano_%s.jpg" />
+		</image>
+		<hotspot name="spot1" style="skin_hotspotstyle" ath="160.516" atv="20.948" linkedscene="main_room_hallway" />
+
+	</scene>
+	
+	<scene name="study" title="Study" onstart="" havevrimage.mobilevr="false" havevrimage.no-mobilevr="true" thumburl="panos/IMG_20201214_102710.tiles/thumb.jpg" lat="4.68141000" lng="-74.04263000" heading="0.0">
+
+		<view hlookat="236.162" vlookat="36.258" fovtype="MFOV" fov="120.000" maxpixelzoom="2.0" fovmin="70" fovmax="140" limitview="auto" />
+
+		<preview url="panos/IMG_20201214_102710.tiles/preview.jpg" />
+
+		<image if="!(webvr.isenabled OR device.mobilevr)">
+			<cube url="panos/IMG_20201214_102710.tiles/%s/l%l/%v/l%l_%s_%v_%h.jpg" multires="512,1152,2176" />
+		</image>
+
+		<image if="webvr.isenabled OR device.mobilevr">
+			<cube url="panos/IMG_20201214_102710.tiles/vr/pano_%s.jpg" />
+		</image>
+		<hotspot name="spot1" style="skin_hotspotstyle_left" ath="-35.948" atv="30.849" linkedscene="living_view" />
+		<hotspot name="spot2" style="skin_hotspotstyle" ath="93.638" atv="21.635" linkedscene="main_room_hallway" />
+
+	</scene>
+	
+
+
+	<scene name="living_view" title="Living View" onstart="" havevrimage.mobilevr="false" havevrimage.no-mobilevr="true" thumburl="panos/IMG_20201214_103040.tiles/thumb.jpg" lat="4.68142700" lng="-74.04279300" heading="0.0">
+
+		<view hlookat="-54.460" vlookat="14.637" fovtype="MFOV" fov="120.000" maxpixelzoom="2.0" fovmin="70" fovmax="140" limitview="auto" />
+
+		<preview url="panos/IMG_20201214_103040.tiles/preview.jpg" />
+
+		<image if="!(webvr.isenabled OR device.mobilevr)">
+			<cube url="panos/IMG_20201214_103040.tiles/%s/l%l/%v/l%l_%s_%v_%h.jpg" multires="512,1152,2176" />
+		</image>
+
+		<image if="webvr.isenabled OR device.mobilevr">
+			<cube url="panos/IMG_20201214_103040.tiles/vr/pano_%s.jpg" />
+		</image>
+		<hotspot name="spot1" style="skin_hotspotstyle" ath="-44.533" atv="19.159" linkedscene="living_room" />
+		<hotspot name="spot2" style="skin_hotspotstyle" ath="-25.534" atv="5.859" linkedscene="kitchen" />
+		<hotspot name="spot3" style="skin_hotspotstyle_right" rotate="-90" ath="-128.711" atv="23.379" linkedscene="study" />
+
+	</scene>
+
+	<scene name="living_room" title="Living Room" onstart="" havevrimage.mobilevr="false" havevrimage.no-mobilevr="true" thumburl="panos/IMG_20201214_103219.tiles/thumb.jpg" lat="4.68147300" lng="-74.04279700" heading="0.0">
+
+		<view hlookat="-187.199" vlookat="16.586" fovtype="MFOV" fov="120.000" maxpixelzoom="2.0" fovmin="70" fovmax="140" limitview="auto" />
+
+		<preview url="panos/IMG_20201214_103219.tiles/preview.jpg" />
+
+		<image if="!(webvr.isenabled OR device.mobilevr)">
+			<cube url="panos/IMG_20201214_103219.tiles/%s/l%l/%v/l%l_%s_%v_%h.jpg" multires="512,1152,2176" />
+		</image>
+
+		<image if="webvr.isenabled OR device.mobilevr">
+			<cube url="panos/IMG_20201214_103219.tiles/vr/pano_%s.jpg" />
+		</image>
+		<hotspot name="spot1" style="skin_hotspotstyle" ath="-27.864" atv="20.539" linkedscene="kitchen" />
+		<hotspot name="spot2" style="skin_hotspotstyle" ath="138.893" atv="20.480" linkedscene="living_view" />
+		<hotspot name="spot3" style="skin_hotspotstyle_right" rotate="-90" ath="173.652" atv="14.992" linkedscene="study" />
+
+	</scene>
+
+	<scene name="kitchen" title="Kitchen" onstart="" havevrimage.mobilevr="false" havevrimage.no-mobilevr="true" thumburl="panos/IMG_20201214_103358.tiles/thumb.jpg" lat="4.68147100" lng="-74.04277000" heading="0.0">
+
+		<view hlookat="143.842" vlookat="19.404" fovtype="MFOV" fov="120.000" maxpixelzoom="2.0" fovmin="70" fovmax="140" limitview="auto" />
+
+		<preview url="panos/IMG_20201214_103358.tiles/preview.jpg" />
+
+		<image if="!(webvr.isenabled OR device.mobilevr)">
+			<cube url="panos/IMG_20201214_103358.tiles/%s/l%l/%v/l%l_%s_%v_%h.jpg" multires="512,1152,2176" />
+		</image>
+
+		<image if="webvr.isenabled OR device.mobilevr">
+			<cube url="panos/IMG_20201214_103358.tiles/vr/pano_%s.jpg" />
+		</image>
+		<hotspot name="spot1" style="skin_hotspotstyle" ath="-166.737" atv="18.997" linkedscene="living_room" />
+		<hotspot name="spot2" style="skin_hotspotstyle" ath="-6.161" atv="3.700" linkedscene="guest_room" />
+		<hotspot name="spot3" style="skin_hotspotstyle_right" ath="-8.667" atv="19.573" linkedscene="washing_room" />
+
+	</scene>
+
+	<scene name="washing_room" title="Washing Room" onstart="" havevrimage.mobilevr="false" havevrimage.no-mobilevr="true" thumburl="panos/IMG_20201214_103536.tiles/thumb.jpg" lat="4.68147000" lng="-74.04276500" heading="0.0">
+
+		<view hlookat="73.805" vlookat="16.791" fovtype="MFOV" fov="120.000" maxpixelzoom="2.0" fovmin="70" fovmax="140" limitview="auto" />
+
+		<preview url="panos/IMG_20201214_103536.tiles/preview.jpg" />
+
+		<image if="!(webvr.isenabled OR device.mobilevr)">
+			<cube url="panos/IMG_20201214_103536.tiles/%s/l%l/%v/l%l_%s_%v_%h.jpg" multires="512,1152,2176" />
+		</image>
+
+		<image if="webvr.isenabled OR device.mobilevr">
+			<cube url="panos/IMG_20201214_103536.tiles/vr/pano_%s.jpg" />
+		</image>
+		<hotspot name="spot1" style="skin_hotspotstyle" ath="-5.503" atv="21.705" linkedscene="guest_room" />
+		<hotspot name="spot2" style="skin_hotspotstyle" ath="147.305" atv="29.331" linkedscene="kitchen" />
+
+	</scene>
+	
+
+	
+	<scene name="bathroom" title="Bathroom" onstart="" havevrimage.mobilevr="false" havevrimage.no-mobilevr="true" thumburl="panos/IMG_20201214_103708.tiles/thumb.jpg" lat="4.68147000" lng="-74.04276500" heading="0.0">
+
+		<view hlookat="-143.053" vlookat="48.668" fovtype="MFOV" fov="120.000" maxpixelzoom="2.0" fovmin="70" fovmax="140" limitview="auto" />
+
+		<preview url="panos/IMG_20201214_103708.tiles/preview.jpg" />
+
+		<image if="!(webvr.isenabled OR device.mobilevr)">
+			<cube url="panos/IMG_20201214_103708.tiles/%s/l%l/%v/l%l_%s_%v_%h.jpg" multires="512,1152,2176" />
+		</image>
+
+		<image if="webvr.isenabled OR device.mobilevr">
+			<cube url="panos/IMG_20201214_103708.tiles/vr/pano_%s.jpg" />
+		</image>
+		<hotspot name="spot1" style="skin_hotspotstyle_right" ath="49.589" atv="17.773" linkedscene="guest_room" />
+		<hotspot name="spot2" style="skin_hotspotstyle_left" ath="-28.182" atv="17.915" linkedscene="kitchen" />
+
+	</scene>
+
+	<scene name="guest_room" title="Guest Room" onstart="" havevrimage.mobilevr="false" havevrimage.no-mobilevr="true" thumburl="panos/IMG_20201214_104326.tiles/thumb.jpg" lat="" lng="" heading="">
+
+		<view hlookat="-12.652" vlookat="24.571" fovtype="MFOV" fov="120.000" maxpixelzoom="2.0" fovmin="70" fovmax="140" limitview="auto" />
+
+		<preview url="panos/IMG_20201214_104326.tiles/preview.jpg" />
+
+		<image if="!(webvr.isenabled OR device.mobilevr)">
+			<cube url="panos/IMG_20201214_104326.tiles/%s/l%l/%v/l%l_%s_%v_%h.jpg" multires="512,1152,2176" />
+		</image>
+
+		<image if="webvr.isenabled OR device.mobilevr">
+			<cube url="panos/IMG_20201214_104326.tiles/vr/pano_%s.jpg" />
+		</image>
+		<hotspot name="spot1" style="skin_hotspotstyle" ath="107.729" atv="8.877" linkedscene="kitchen" />
+		<hotspot name="spot2" style="skin_hotspotstyle_left" ath="101.157" atv="17.129" linkedscene="bathroom" />
+
+	</scene>
+
+	
+		<!-- Copies 
+	<scene name="scene_IMG_20201214_102821" title="IMG_20201214_102821 copy" onstart="" havevrimage.mobilevr="false" havevrimage.no-mobilevr="true" thumburl="panos/IMG_20201214_102821.tiles/thumb.jpg" lat="4.68140700" lng="-74.04264600" heading="0.0">
+
+		<view hlookat="0.0" vlookat="0.0" fovtype="MFOV" fov="120" maxpixelzoom="2.0" fovmin="70" fovmax="140" limitview="auto" />
+
+		<preview url="panos/IMG_20201214_102821.tiles/preview.jpg" />
+
+		<image if="!(webvr.isenabled OR device.mobilevr)">
+			<cube url="panos/IMG_20201214_102821.tiles/%s/l%l/%v/l%l_%s_%v_%h.jpg" multires="512,1152,2176" />
+		</image>
+
+		<image if="webvr.isenabled OR device.mobilevr">
+			<cube url="panos/IMG_20201214_102821.tiles/vr/pano_%s.jpg" />
+		</image>
+
+	</scene>
+
+
+	
+	<scene name="scene_IMG_20201214_102958" title="IMG_20201214_102958 copy" onstart="" havevrimage.mobilevr="false" havevrimage.no-mobilevr="true" thumburl="panos/IMG_20201214_102958.tiles/thumb.jpg" lat="4.68142900" lng="-74.04279400" heading="0.0">
+
+		<view hlookat="0.0" vlookat="0.0" fovtype="MFOV" fov="120" maxpixelzoom="2.0" fovmin="70" fovmax="140" limitview="auto" />
+
+		<preview url="panos/IMG_20201214_102958.tiles/preview.jpg" />
+
+		<image if="!(webvr.isenabled OR device.mobilevr)">
+			<cube url="panos/IMG_20201214_102958.tiles/%s/l%l/%v/l%l_%s_%v_%h.jpg" multires="512,1152,2176" />
+		</image>
+
+		<image if="webvr.isenabled OR device.mobilevr">
+			<cube url="panos/IMG_20201214_102958.tiles/vr/pano_%s.jpg" />
+		</image>
+
+	</scene>
+	-->
+
+
+</krpano>
