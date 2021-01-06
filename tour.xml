@@ -2,6 +2,8 @@
 
 	<include url="skin/vtourskin.xml" if="0"/>
 	<include url="vuho_overlay.xml" if="1" />
+	<include url="map.xml" if="1" />
+	
 	<!-- customize skin settings: maps, gyro, webvr, thumbnails, tooltips, layout, design, ... -->
 	<skin_settings maps="true"
 	               maps_type="google"
@@ -69,6 +71,27 @@
 	<!-- <include url="skin/vtourskin_design_117round.xml"    /> -->
 	<!-- <include url="skin/vtourskin_design_black.xml"       /> -->
 	
+	<action name="print">
+		showlog();
+		trace(" ",%1);
+	</action>
+
+	<events onkeydown="debugaction();" if="0"/>
+	
+	<action name="debugaction" if="0" >
+		
+		if(keycode == 70, <!-- F KEY -->
+			toggle_mapmenu();
+		);
+		
+		if(keycode == 49, <!-- 1 KEY -->
+			switchFloor(1);
+		);
+		if(keycode == 50, <!-- 2 KEY -->
+			switchFloor(2);
+		);
+	</action>
+	
 	<!-- Dependencies -->
 	<style name="skin_hotspotstyle" url="%ROOT%/skin/vtourskin_hotspot.png" edge="top" distorted="true"
 	   tooltip=""
@@ -110,10 +133,8 @@
 		loadscene(kitchen, null, MERGE);
 		if(startactions !== null, startactions() );
 	</action>
-
-
 	
-	<scene name="main_room" title="Main Room" onstart="" havevrimage.mobilevr="false" havevrimage.no-mobilevr="true" thumburl="panos/IMG_20201214_102252.tiles/thumb.jpg" lat="" lng="" heading="">
+	<scene name="main_room" title="Main Room" onstart="updateRadar(10);" havevrimage.mobilevr="false" havevrimage.no-mobilevr="true" thumburl="panos/IMG_20201214_102252.tiles/thumb.jpg" lat="" lng="" heading="">
 
 		<view hlookat="-33.101" vlookat="16.089" fovtype="MFOV" fov="120.000" maxpixelzoom="2.0" fovmin="70" fovmax="140" limitview="auto" />
 
@@ -130,7 +151,7 @@
 
 	</scene>
 	
-	<scene name="main_room_hallway" title="Main Room - Hallway" onstart="" havevrimage.mobilevr="false" havevrimage.no-mobilevr="true" thumburl="panos/IMG_20201214_104724.tiles/thumb.jpg" lat="4.68148400" lng="-74.04269200" heading="0.0">
+	<scene name="main_room_hallway" title="Main Room - Hallway" onstart="updateRadar(8);" havevrimage.mobilevr="false" havevrimage.no-mobilevr="true" thumburl="panos/IMG_20201214_104724.tiles/thumb.jpg" lat="4.68148400" lng="-74.04269200" heading="0.0">
 
 		<view hlookat="170.340" vlookat="30.330" fovtype="MFOV" fov="120.000" maxpixelzoom="2.0" fovmin="70" fovmax="140" limitview="auto" />
 
@@ -149,7 +170,7 @@
 
 	</scene>
 	
-	<scene name="main_room_bathroom" title="Main Room - Bathroom" onstart="" havevrimage.mobilevr="false" havevrimage.no-mobilevr="true" thumburl="panos/IMG_20201214_102536.tiles/thumb.jpg" lat="4.68140800" lng="-74.04262000" heading="0.0">
+	<scene name="main_room_bathroom" title="Main Room - Bathroom" onstart="updateRadar(9);" havevrimage.mobilevr="false" havevrimage.no-mobilevr="true" thumburl="panos/IMG_20201214_102536.tiles/thumb.jpg" lat="4.68140800" lng="-74.04262000" heading="0.0">
 
 		<view hlookat="103.664" vlookat="47.413" fovtype="MFOV" fov="120.000" maxpixelzoom="2.0" fovmin="70" fovmax="140" limitview="auto" />
 
@@ -166,7 +187,7 @@
 
 	</scene>
 	
-	<scene name="study" title="Study" onstart="" havevrimage.mobilevr="false" havevrimage.no-mobilevr="true" thumburl="panos/IMG_20201214_102710.tiles/thumb.jpg" lat="4.68141000" lng="-74.04263000" heading="0.0">
+	<scene name="study" title="Study" onstart="updateRadar(7);" havevrimage.mobilevr="false" havevrimage.no-mobilevr="true" thumburl="panos/IMG_20201214_102710.tiles/thumb.jpg" lat="4.68141000" lng="-74.04263000" heading="0.0">
 
 		<view hlookat="236.162" vlookat="36.258" fovtype="MFOV" fov="120.000" maxpixelzoom="2.0" fovmin="70" fovmax="140" limitview="auto" />
 
@@ -186,7 +207,7 @@
 	
 
 
-	<scene name="living_view" title="Living View" onstart="" havevrimage.mobilevr="false" havevrimage.no-mobilevr="true" thumburl="panos/IMG_20201214_103040.tiles/thumb.jpg" lat="4.68142700" lng="-74.04279300" heading="0.0">
+	<scene name="living_view" title="Living View" onstart="updateRadar(6);" havevrimage.mobilevr="false" havevrimage.no-mobilevr="true" thumburl="panos/IMG_20201214_103040.tiles/thumb.jpg" lat="4.68142700" lng="-74.04279300" heading="0.0">
 
 		<view hlookat="-54.460" vlookat="14.637" fovtype="MFOV" fov="120.000" maxpixelzoom="2.0" fovmin="70" fovmax="140" limitview="auto" />
 
@@ -205,7 +226,7 @@
 
 	</scene>
 
-	<scene name="living_room" title="Living Room" onstart="" havevrimage.mobilevr="false" havevrimage.no-mobilevr="true" thumburl="panos/IMG_20201214_103219.tiles/thumb.jpg" lat="4.68147300" lng="-74.04279700" heading="0.0">
+	<scene name="living_room" title="Living Room" onstart="updateRadar(5);" havevrimage.mobilevr="false" havevrimage.no-mobilevr="true" thumburl="panos/IMG_20201214_103219.tiles/thumb.jpg" lat="4.68147300" lng="-74.04279700" heading="0.0">
 
 		<view hlookat="-187.199" vlookat="16.586" fovtype="MFOV" fov="120.000" maxpixelzoom="2.0" fovmin="70" fovmax="140" limitview="auto" />
 
@@ -224,7 +245,7 @@
 
 	</scene>
 
-	<scene name="kitchen" title="Kitchen" onstart="" havevrimage.mobilevr="false" havevrimage.no-mobilevr="true" thumburl="panos/IMG_20201214_103358.tiles/thumb.jpg" lat="4.68147100" lng="-74.04277000" heading="0.0">
+	<scene name="kitchen" title="Kitchen" onstart="updateRadar(4);" havevrimage.mobilevr="false" havevrimage.no-mobilevr="true" thumburl="panos/IMG_20201214_103358.tiles/thumb.jpg" lat="4.68147100" lng="-74.04277000" heading="0.0">
 
 		<view hlookat="143.842" vlookat="19.404" fovtype="MFOV" fov="120.000" maxpixelzoom="2.0" fovmin="70" fovmax="140" limitview="auto" />
 
@@ -243,7 +264,7 @@
 
 	</scene>
 
-	<scene name="washing_room" title="Washing Room" onstart="" havevrimage.mobilevr="false" havevrimage.no-mobilevr="true" thumburl="panos/IMG_20201214_103536.tiles/thumb.jpg" lat="4.68147000" lng="-74.04276500" heading="0.0">
+	<scene name="washing_room" title="Washing Room" onstart="updateRadar(3);" havevrimage.mobilevr="false" havevrimage.no-mobilevr="true" thumburl="panos/IMG_20201214_103536.tiles/thumb.jpg" lat="4.68147000" lng="-74.04276500" heading="0.0">
 
 		<view hlookat="73.805" vlookat="16.791" fovtype="MFOV" fov="120.000" maxpixelzoom="2.0" fovmin="70" fovmax="140" limitview="auto" />
 
@@ -263,7 +284,7 @@
 	
 
 	
-	<scene name="bathroom" title="Bathroom" onstart="" havevrimage.mobilevr="false" havevrimage.no-mobilevr="true" thumburl="panos/IMG_20201214_103708.tiles/thumb.jpg" lat="4.68147000" lng="-74.04276500" heading="0.0">
+	<scene name="bathroom" title="Bathroom" onstart="updateRadar(2);" havevrimage.mobilevr="false" havevrimage.no-mobilevr="true" thumburl="panos/IMG_20201214_103708.tiles/thumb.jpg" lat="4.68147000" lng="-74.04276500" heading="0.0">
 
 		<view hlookat="-143.053" vlookat="48.668" fovtype="MFOV" fov="120.000" maxpixelzoom="2.0" fovmin="70" fovmax="140" limitview="auto" />
 
@@ -281,7 +302,7 @@
 
 	</scene>
 
-	<scene name="guest_room" title="Guest Room" onstart="" havevrimage.mobilevr="false" havevrimage.no-mobilevr="true" thumburl="panos/IMG_20201214_104326.tiles/thumb.jpg" lat="" lng="" heading="">
+	<scene name="guest_room" title="Guest Room" onstart="updateRadar(1);" havevrimage.mobilevr="false" havevrimage.no-mobilevr="true" thumburl="panos/IMG_20201214_104326.tiles/thumb.jpg" lat="" lng="" heading="">
 
 		<view hlookat="-12.652" vlookat="24.571" fovtype="MFOV" fov="120.000" maxpixelzoom="2.0" fovmin="70" fovmax="140" limitview="auto" />
 

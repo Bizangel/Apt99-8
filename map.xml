@@ -1,0 +1,77 @@
+<krpano>
+	<action name="switchFloor" scope="local" args="floor_n">
+		if(floor_n == 1,
+			<!-- Floor 1 -->
+			set(layer[map].url,%ROOT%/floor1.png);
+			set(layer[firstFloormap].url,%ROOT%/icons/floor1on.png);
+			set(layer[secondFloormap].url,%ROOT%/icons/floor2off.png);
+			
+			for(set(i,1), i LE 6, inc(i), 
+				set(layer[calc('spot' + i)].visible, true);
+			);  
+			
+			for(set(i,7), i LE 10, inc(i), 
+				set(layer[calc('spot' + i)].visible, false);
+			); 
+			
+			,
+			<!-- Floor 2 -->
+			set(layer[map].url,%ROOT%/floor2.png);
+			set(layer[firstFloormap].url,%ROOT%/icons/floor1off.png);
+			set(layer[secondFloormap].url,%ROOT%/icons/floor2on.png);
+			
+			for(set(i,1), i LE 6, inc(i), 
+				set(layer[calc('spot' + i)].visible, false);
+			); 
+			
+			for(set(i,7), i LE 10, inc(i), 
+				set(layer[calc('spot' + i)].visible, true);
+			); 
+		);
+	</action>
+	
+	<action name="mapspot_onclick" scope="local">
+		skin_loadscene(get(caller.linkedscene), get(skin_settings.loadscene_blend));
+	</action>
+	
+	<action name="updateRadar" scope="local" args="spot_n">
+		calc(spotname, 'spot' + spot_n);
+		set(layer[radar].parent, get(spotname));
+		set(layer[radar].heading, get(layer[get(spotname)].facing) );
+
+		if(spot_n LE 6,
+			switchFloor(1);
+			,
+			switchFloor(2);
+		);
+	</action>
+	
+	
+	<layer name="radar" keep = "true" url.flash="%SWFPATH%/plugins/radar.swf" url.html5="%SWFPATH%/plugins/radar.js" align="center" zorder="1" scale.mobile="2.3" fillalpha="0.5" scale="0.8"
+ fillcolor="0x7F5F3F" linewidth="1.0" linecolor="0xE0E0A0" linealpha="0.5" editmode="true" />
+ 
+	<layer name="map" y="16%" x="50" url="%ROOT%/floor1.png" keep="true" handcursor="false"
+		align="leftbottom" scale="0.3" scale.mobile="0.11" scalechildren="true"  >
+		
+		
+		<layer name="firstFloormap" url="%ROOT%/icons/floor1on.png" onclick="switchFloor(1);" scale="0.8" align="lefttop" x="0" y="-135"/>
+		<layer name="secondFloormap" url="%ROOT%/icons/floor2off.png" onclick="switchFloor(2);" scale="0.8" align="lefttop" x="690" y="-135"/>
+		
+	</layer>
+	
+	<style name="mapspot" keep="true" url="greendot.png" parent="map" scale="1" align="lefttop" edge="center" scale.mobile="2.5"
+	onclick="mapspot_onclick();"/>
+	
+	<layer name="spot1" style="mapspot" x="1363" y="661" zorder="1" linkedscene="guest_room" facing="75"/>
+	<layer name="spot2" style="mapspot" x="1117" y="735" zorder="1" linkedscene="bathroom" facing="-90"/>
+	<layer name="spot3" style="mapspot" x="929" y="608" zorder="1" linkedscene="washing_room" facing="20"/>
+	<layer name="spot4" style="mapspot" x="831" y="721" zorder="1" linkedscene="kitchen" facing="0"/>
+	<layer name="spot5" style="mapspot" x="604" y="675" zorder="1" linkedscene="living_room" facing="30"/>
+	<layer name="spot6" style="mapspot" x="246" y="774" zorder="1" linkedscene="living_view" facing="30"/>
+	
+	<layer name="spot7" style="mapspot" x="770" y="678" zorder="1" linkedscene="study" facing="-100"/>
+	<layer name="spot8" style="mapspot" x="979" y="690" zorder="1" linkedscene="main_room_hallway" facing="-20"/>
+	<layer name="spot9" style="mapspot" x="1093" y="800" zorder="1" linkedscene="main_room_bathroom" facing="110"/>
+	<layer name="spot10" style="mapspot" x="1389" y="633" zorder="1" linkedscene="main_room" facing="-150"/>
+	
+</krpano>
