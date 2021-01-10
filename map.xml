@@ -54,24 +54,24 @@
 		align="leftbottom" scale="0.3" scale.mobile="0.11" scalechildren="true"  >
 		
 		
-		<layer name="firstFloormap" url="%ROOT%/icons/floor1on.png" onclick="switchFloor(1);" scale="0.8" align="lefttop" x="0" y="-135"/>
-		<layer name="secondFloormap" url="%ROOT%/icons/floor2off.png" onclick="switchFloor(2);" scale="0.8" align="lefttop" x="690" y="-135"/>
+		<layer name="firstFloormap" url="%ROOT%/icons/floor1on.png" onclick="switchFloor(1);" scale="0.82" align="lefttop" x="15" y="0" alpha="0"/>
+		<layer name="secondFloormap" url="%ROOT%/icons/floor2off.png" onclick="switchFloor(2);" scale="0.82" align="lefttop" x="730" y="0" alpha="0"/>
 		
 	</layer>
 	
-	<style name="mapspot" keep="true" url="greendot.png" parent="map" scale="1" align="lefttop" edge="center" scale.mobile="2.5"
+	<style name="mapspot" keep="true" url="greydot.png" parent="map" scale="1" align="lefttop" edge="center" scale.mobile="2.5"
 	onclick="mapspot_onclick();"/>
 	
-	<layer name="spot1" style="mapspot" x="1363" y="661" zorder="1" linkedscene="guest_room" facing="75"/>
-	<layer name="spot2" style="mapspot" x="1117" y="735" zorder="1" linkedscene="bathroom" facing="-90"/>
-	<layer name="spot3" style="mapspot" x="929" y="608" zorder="1" linkedscene="washing_room" facing="20"/>
-	<layer name="spot4" style="mapspot" x="831" y="721" zorder="1" linkedscene="kitchen" facing="0"/>
-	<layer name="spot5" style="mapspot" x="604" y="675" zorder="1" linkedscene="living_room" facing="30"/>
-	<layer name="spot6" style="mapspot" x="246" y="774" zorder="1" linkedscene="living_view" facing="30"/>
+	<layer name="spot1" style="mapspot" x="1347" y="570" zorder="1" linkedscene="guest_room" facing="75"/>
+	<layer name="spot2" style="mapspot" x="1196" y="633" zorder="1" linkedscene="bathroom" facing="-90"/>
+	<layer name="spot3" style="mapspot" x="960" y="555" zorder="1" linkedscene="washing_room" facing="20"/>
+	<layer name="spot4" style="mapspot" x="735" y="639" zorder="1" linkedscene="kitchen" facing="0"/>
+	<layer name="spot5" style="mapspot" x="526" y="592" zorder="1" linkedscene="living_room" facing="30"/>
+	<layer name="spot6" style="mapspot" x="271" y="687" zorder="1" linkedscene="living_view" facing="30"/>
 	
-	<layer name="spot7" style="mapspot" x="770" y="678" zorder="1" linkedscene="study" facing="-100"/>
-	<layer name="spot8" style="mapspot" x="979" y="690" zorder="1" linkedscene="main_room_hallway" facing="-20"/>
-	<layer name="spot9" style="mapspot" x="1093" y="800" zorder="1" linkedscene="main_room_bathroom" facing="110"/>
-	<layer name="spot10" style="mapspot" x="1389" y="633" zorder="1" linkedscene="main_room" facing="-150"/>
+	<layer name="spot7" style="mapspot" x="700" y="575" zorder="1" linkedscene="study" facing="-100"/>
+	<layer name="spot8" style="mapspot" x="1022" y="595" zorder="1" linkedscene="main_room_hallway" facing="-20"/>
+	<layer name="spot9" style="mapspot" x="977" y="702" zorder="1" linkedscene="main_room_bathroom" facing="110"/>
+	<layer name="spot10" style="mapspot" x="1359" y="539" zorder="1" linkedscene="main_room" facing="-150"/>
 	
 </krpano>
